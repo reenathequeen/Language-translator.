@@ -1,3 +1,4 @@
+import streamlit as st
 yoruba_dictionary = {
     "place": "ibi","wife": "aya","dog": "aja","pepper": "ata","body": "ara","hand": "owo",
     "day": "ọjọ́","money": "owo","coward": "ojo","yam": "iṣu","hair": "irun","heart": "ọkan",
@@ -56,42 +57,21 @@ english_words = {
 
 
 
-def translate_word():
-    print("Hello, Welcome to English Translator program.")
-    print("Here are the languages available to translate to: Yoruba,Igbo,Hausa,Tiv and Ibibio")
+st.title("Language Translator App")
+st.markdown("Hello, Welcome to English Translator program.")
+choose_language = st.sidebar.selectbox("Which Language would you like to translate to:", translators.keys())
 
-    continue_translating = True
+if choose_language:
+    current_dict = translators[choose_language]
 
-    while continue_translating:
-        choose_language = (input("Type in the language would you like to make use of or 'exit' to quit: ")
-                           .lower())
-        if choose_language in translators:
-            current_dict = translators[choose_language]
-            english_translate = True
-            while english_translate:
-                print(f"These are the words available to translate to {choose_language.capitalize()}:"
-                      f"{english_words[choose_language]}")
-                english_word = input(
-                    f"Enter an English word to translate to {choose_language.capitalize()} "
-                    f"(or 'back' to choose another language): ").lower()
-                if english_word == "back":
-                    print("Here are the languages available to translate to: Yoruba,Igbo,Hausa,Tiv and Ibibio")
-                    english_translate = False
-                elif english_word in english_words[choose_language]:
-                    translation = current_dict.get(english_word)
-                    print(f"The {choose_language.capitalize()} translation for '{english_word}' is: "
-                          f"'{translation}'")
-                else:
-                    print(f"Sorry, the word '{english_word}' is not in the {choose_language.capitalize()}"
-                          f" dictionary.")
-                print("-" * 20)
-
-        elif choose_language == "exit":
-            print("Goodbye")
-            continue_translating = False
-        else:
-            print("Invalid language choice. Please select from the list above.")
-            print("-" * 20)
+    word_to_translate = st.selectbox( f"Select a word to translate to {choose_language.capitalize()}:",
+                 options=[""] + list(current_dict.keys()))
+    if st.button("Translate"):
+        if word_to_translate:
+            translation = current_dict.get(word_to_translate, "Translation not found.")
+            st.divider()
+            st.subheader(f"The translation of '{word_to_translate}' in {choose_language.capitalize()} is: {translation}")
+            st.success(f"**{translation}**")
+            st.write("Thank you for using the Language Translator App!")
 
 
-translate_word()
